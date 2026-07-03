@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reconstructing Virginia's Wolf History</title>
+<style>
+  :root{
+    --cream: #f2ead8;
+    --cream-2: #fbf7ed;
+    --cream-3: #e4dcc8;
+    --forest: #1e3657;
+    --forest-2: #0d1f35;
+    --forest-3: #7f9675;
+    --black: #0f1010;
+    --ink: #171817;
+    --muted: #526057;
+    --faint: #7d8579;
+    --line: #c8c2ad;
+    --panel: #FFF8E3;
+    --panel-2: #f4eddd;
+    --paper: #fffaf0;
+    --paper-line: #dcd3bf;
+    --copper: #1e3657;
+    --copper-2: #0d1f35;
+    --moss: #7f9675;
+    --rust: #7f9675;
+    --slate: #2e415d;
+    --display: "Iowan Old Style", "Baskerville", "Baskerville Old Face", "Libre Baskerville", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    --mono: "Iowan Old Style", "Baskerville", "Baskerville Old Face", "Palatino Linotype", Georgia, serif;
+    --sans: Optima, "Avenir Next", "Gill Sans", "Helvetica Neue", Arial, sans-serif;
+    --forest-dark: #0d1f35;
+  }
+
+  * { box-sizing: border-box; }
+  html,body{
+    margin:0;
+    padding:0;
+    background: var(--forest);
+    color: var(--ink);
+    font-family: var(--display);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body{
+    padding: 34px;
+    background:
+      radial-gradient(circle at top left, rgba(255,250,240,.08), transparent 28rem),
+      linear-gradient(180deg, var(--forest-2) 0%, var(--forest) 100%);
+  }
+
+  .masthead{
+    max-width: 1480px;
+    margin: 0 auto 24px;
+    text-align: center;
+    padding: 30px 34px 28px;
+    border: 1px solid var(--forest);
+    border-top: 5px solid var(--forest);
+    background: var(--panel);
+    box-shadow: 0 18px 45px rgba(17,18,15,.07);
+  }
+  .masthead h1{
+    font-size: clamp(34px, 4.2vw, 66px);
+    font-weight: 400;
+    line-height: 1.02;
+    margin:0 0 10px 0;
+    letter-spacing:-0.65px;
+    color: var(--black);
+  }
+  .masthead .sub{
+    font-size: clamp(18px, 1.6vw, 24px);
+    color: var(--forest);
+    max-width: 940px;
+    line-height:1.35;
+    letter-spacing:.12px;
+    margin: 0 auto;
+  }
+  .model-panel{
+    margin-top: 18px;
+    padding: 18px 20px 16px;
+    border-left: 3px solid var(--forest);
+    background: rgba(30,54,87,.055);
+    text-align: center;
+  }
+  .model-label{
+    font-family: var(--display);
+    font-size:20px;
+    font-variant-caps: small-caps;
+    letter-spacing:.045em;
+    text-transform:none;
+    color: var(--black);
+    margin: 0 0 12px;
+    font-weight:500;
+  }
+  .model-equation{
+    font-family: "STIX Two Math", "Cambria Math", "Iowan Old Style", "Times New Roman", Georgia, serif;
+    font-size: clamp(19px, 2vw, 31px);
+    color: var(--forest-dark);
+    line-height: 1.35;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .model-equation .eq-var{ font-style: italic; }
+  .model-equation .frac{
+    display:inline-grid;
+    grid-template-rows:auto auto;
+    vertical-align:middle;
+    text-align:center;
+    margin-left: 6px;
+  }
+  .model-equation .num{
+    border-bottom: 1.6px solid var(--forest-dark);
+    padding: 0 8px 3px;
+  }
+  .model-equation .den{
+    padding: 3px 8px 0;
+  }
+  .variable-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+    gap: 12px 20px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .variable{
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .variable .sym{
+    display:inline-block;
+    min-width: 56px;
+    font-family: "STIX Two Math", "Cambria Math", "Iowan Old Style", "Times New Roman", Georgia, serif;
+    font-size: 15px;
+    color: var(--black);
+  }
+  .variable .sym.wide{
+    min-width: 76px;
+  }
+  .variable strong{
+    color: var(--black);
+    font-weight: 600;
+  }
+
+  .model-section{
+    width: 100%;
+    margin: 0;
+  }
+  .model-section .model-panel{
+    border-left: none;
+    border-top: 4px solid var(--forest);
+    border: 1px solid var(--line);
+    background: var(--panel);
+    box-shadow: 0 10px 30px rgba(17,18,15,.045);
+  }
+  .model-plain{
+    max-width: 1040px;
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 16.5px;
+    line-height: 1.55;
+  }
+  .variable-grid.primary-vars{
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .aux-breakout{
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    background: rgba(30,54,87,.040);
+  }
+  .aux-title{
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--forest);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .aux-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px 22px;
+  }
+
+  .layout{
+    max-width: 1480px;
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: 310px 1fr;
+    gap: 24px;
+    align-items:start;
+  }
+  @media (max-width: 880px){
+    body{ padding:18px; }
+    .layout{ grid-template-columns: 1fr; }
+  }
+
+  .panel{
+    background: var(--panel);
+    border:1px solid var(--line);
+    border-radius:2px;
+    box-shadow: 0 10px 30px rgba(17,18,15,.045);
+  }
+  .panel h2{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.8px;
+    color: var(--forest);
+    margin:0;
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(30,54,87,.055), transparent);
+    font-weight: 700;
+  }
+
+  .county-tabs{ display:flex; flex-direction:column; }
+  .county-tab{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 16px;
+    cursor:pointer;
+    border-bottom:1px solid var(--line);
+    font-size:15px;
+    color: var(--ink);
+    transition: background .12s ease, color .12s ease;
+  }
+  .county-tab:last-child{ border-bottom:none; }
+  .county-tab:hover{ background: var(--panel-2); }
+  .county-tab.active{
+    background: var(--forest);
+    color: var(--cream-2);
+  }
+  .county-tab .swatch{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    margin-right:10px;
+    display:inline-block;
+    flex-shrink:0;
+    border:1px solid rgba(17,18,15,.18);
+  }
+  .county-tab.active .swatch{ border-color: rgba(255,250,240,.55); }
+  .county-tab .name{ display:flex; align-items:center; }
+  .county-tab .span{
+    font-size:11px;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .county-tab.active .span{ color: rgba(255,250,240,.7); }
+
+  .controls-body{ padding: 16px; display:flex; flex-direction:column; gap:17px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{
+    font-size:12px;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+    gap: 10px;
+    letter-spacing:.15px;
+  }
+  .field label .val{
+    color: var(--forest);
+    font-weight:700;
+    font-variant-numeric: tabular-nums;
+  }
+  .field .hint{
+    font-size:11.5px;
+    color: var(--faint);
+    line-height:1.45;
+  }
+
+  input[type=range]{
+    -webkit-appearance:none;
+    width:100%;
+    height:3px;
+    background: var(--line);
+    border-radius:0;
+    outline:none;
+    margin: 7px 0 3px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background: var(--forest);
+    border: 2px solid var(--cream-2);
+    box-shadow: 0 0 0 1px var(--forest);
+    cursor:pointer;
+    margin-top:-5.5px;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background: var(--forest);
+    border: 2px solid var(--cream-2);
+    box-shadow: 0 0 0 1px var(--forest);
+    cursor:pointer;
+  }
+
+  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  select, .segmented{ width:100%; }
+  .segmented{
+    display:flex;
+    border:1px solid var(--line);
+    border-radius:2px;
+    overflow:hidden;
+    background: var(--cream-2);
+  }
+  .segmented button{
+    flex:1;
+    background: transparent;
+    border:none;
+    color: var(--muted);
+    font-size:11.5px;
+    padding:8px 5px;
+    cursor:pointer;
+    border-left:1px solid var(--line);
+    font-family: var(--display);
+  }
+  .segmented button:first-child{ border-left:none; }
+  .segmented button.active{
+    background: var(--forest);
+    color: var(--cream-2);
+    font-weight:700;
+  }
+
+  .divider{ height:1px; background:var(--line); margin: 2px 0; }
+  .note{
+    font-size:11.5px;
+    color:var(--faint);
+    line-height:1.55;
+    padding: 2px 2px 0;
+  }
+
+  .results{ display:flex; flex-direction:column; gap:20px; }
+  .stat-strip{
+    display:grid;
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    gap:1px;
+    background:var(--forest);
+    border:1px solid var(--forest);
+    border-radius:2px;
+    overflow:hidden;
+    box-shadow: 0 10px 30px rgba(17,18,15,.045);
+  }
+  @media (max-width: 1180px){
+    .stat-strip{ grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); }
+  }
+  .stat{ background: var(--panel); padding:14px 16px; }
+  .stat .k{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--forest);
+    margin-bottom:7px;
+    font-weight:700;
+  }
+  .stat .v{
+    font-size:22px;
+    color: var(--black);
+    font-weight:500;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .v small{ font-size:12px; color:var(--muted); font-weight:400; }
+
+  .chart-card{ padding: 18px 20px 14px; }
+  .chart-card .chart-title{
+    font-size:20px;
+    color: var(--black);
+    margin: 0 0 3px;
+    font-weight:500;
+    letter-spacing:-.2px;
+  }
+  #chart1Title,
+  #chartAreaTitle{
+    font-variant-caps: small-caps;
+    letter-spacing:.045em;
+  }
+  #chart1Title,
+  #chartAreaTitle{
+    text-align: center;
+  }
+  .chart-card .chart-desc{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:12px;
+    line-height:1.45;
+  }
+  svg{
+    display:block;
+    width:100%;
+    height:auto;
+    background: var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+  }
+  .legend{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:12px;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .legend .ln{ width:18px; height:0; border-top:2px solid; display:inline-block; }
+  .legend .ln.dash{ border-top-style:dashed; }
+  .legend .sw{ width:11px; height:11px; display:inline-block; border-radius:2px; }
+
+  .chart-tooltip{
+    position: fixed;
+    z-index: 1000;
+    display: none;
+    max-width: 310px;
+    padding: 10px 12px;
+    background: rgba(17,18,15,.96);
+    color: var(--cream-2);
+    border: 1px solid rgba(255,250,240,.25);
+    box-shadow: 0 12px 28px rgba(0,0,0,.28);
+    font-size: 12px;
+    line-height: 1.45;
+    pointer-events: none;
+  }
+  .chart-tooltip .tt-title{
+    font-size: 13px;
+    font-weight: 700;
+    color: #fffaf0;
+    margin-bottom: 4px;
+  }
+  .chart-tooltip .tt-row{
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid rgba(255,250,240,.12);
+    padding-top: 3px;
+    margin-top: 3px;
+  }
+  .chart-tooltip .tt-k{ color: rgba(255,250,240,.72); }
+  .chart-tooltip .tt-v{ color: #fffaf0; text-align: right; font-variant-numeric: tabular-nums; }
+  .hover-layer{ cursor: crosshair; }
+
+  footer{
+    max-width:1480px;
+    margin: 30px auto 0;
+    padding:16px 20px 0;
+    border-top:1px solid rgba(255,250,240,.28);
+    font-size:12px;
+    color: rgba(255,250,240,.82);
+    line-height:1.65;
+  }
+  footer a{ color: var(--cream-2); }
+</style>
+</head>
+<body>
+
+<div id="chartTooltip" class="chart-tooltip"></div>
+
+<div class="masthead">
+  <h1>Reconstructing Virginia&rsquo;s Wolf History</h1>
+  <div class="sub">A County-Level Backcalculation Model</div>
+
+
+</div>
+
+<div class="layout">
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <div class="panel">
+      <h2>County</h2>
+      <div class="county-tabs" id="countyTabs"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Model parameters</h2>
+      <div class="controls-body">
+
+        <div class="field">
+          <label>Intrinsic growth &lambda; (mean) <span class="val" id="lambdaMeanVal"></span></label>
+          <input type="range" id="lambdaMean" min="1.05" max="1.40" step="0.01">
+          <div class="hint">Unexploited gray wolf populations: &lambda;&asymp;1.20&ndash;1.35 (Fuller 1989; Fuller et al. 2003)</div>
+        </div>
+        <div class="field">
+          <label>&lambda; annual variability (SD) <span class="val" id="lambdaSdVal"></span></label>
+          <input type="range" id="lambdaSd" min="0" max="0.12" step="0.005">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Additional mortality m (mean) <span class="val" id="mMeanVal"></span></label>
+          <input type="range" id="mMean" min="0" max="0.30" step="0.01">
+          <div class="hint">Non-bounty loss: disease, strife, unrecorded mortality</div>
+        </div>
+        <div class="field">
+          <label>m annual variability (SD) <span class="val" id="mSdVal"></span></label>
+          <input type="range" id="mSd" min="0" max="0.10" step="0.005">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Compensatory mortality c <span class="val" id="compVal"></span></label>
+          <input type="range" id="comp" min="0" max="0.80" step="0.01">
+          <div class="hint">Share of bounty payments that displaces non-bounty mortality. Compensation is capped by the amount of non-bounty mortality available to be displaced.</div>
+        </div>
+        <div class="note" id="thresholdNote"></div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Assumed wolf density in final dataset year <span class="val" id="startDensVal"></span></label>
+          <div class="row2">
+            <input type="range" id="startDensLow" min="0" max="150" step="0.5">
+            <input type="range" id="startDensHigh" min="0" max="150" step="0.5">
+          </div>
+          <div class="hint">Defaults to 0&ndash;0: every county's bounty count had already dropped to zero by its final recorded year, consistent with wolves being effectively extirpated there by then. Raise this only if you think undetected wolves persisted past the last bounty claim. <span id="startRangeHint"></span></div>
+        </div>
+
+        <div class="field">
+          <label>Chart view</label>
+          <div class="segmented" id="viewMode">
+            <button data-v="density" class="active">Density / 1000 km&sup2;</button>
+            <button data-v="count">Raw count</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Monte Carlo replicates <span class="val" id="repsVal"></span></label>
+          <input type="range" id="reps" min="50" max="1000" step="50">
+        </div>
+
+        <div class="field">
+          <label>Missing-year handling</label>
+          <div class="segmented" id="fillMethod">
+            <button data-v="interp" class="active">Interpolate</button>
+            <button data-v="zero">Zero-fill</button>
+            <button data-v="mean">County mean</button>
+          </div>
+          <div class="hint">(How to handle intervening years with no levy data)</div>
+        </div>
+
+        <div class="note" id="dataNote"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results">
+    <div class="stat-strip" id="statStrip"></div>
+
+    <div class="panel chart-card">
+      <div class="chart-title" id="chart1Title">Population density</div>
+      <div class="chart-desc" id="chart1Desc"></div>
+      <svg id="chart1" viewBox="0 0 960 380" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="legend" id="legend1"></div>
+    </div>
+
+    <div class="panel chart-card">
+      <div class="chart-title" id="chartAreaTitle">County Area Over Time</div>
+      <div class="chart-desc"></div>
+      <svg id="chartArea" viewBox="0 0 960 200" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="legend" id="legendArea"></div>
+    </div>
+
+    <div class="model-section">
+      <div class="model-panel">
+        <div class="model-label">The Model</div>
+        <p class="model-plain">
+          The model begins with an assumed wolf density in the final modeled ledger year and works backward one year at a time. For each year, it adds back that year&rsquo;s effective bounty payments, divides them by <em>A</em><sub>t</sub> (county area in year <em>t</em>, measured in 1,000&nbsp;km&sup2; units), and then divides by the year&rsquo;s net demographic multiplier, &lambda;(1&minus;m). The result is a reconstructed previous-year density. County area affects bounty-payment density and raw-count display, but the density curve itself is not forced to jump simply because a county boundary changed.
+        </p>
+        <div class="model-equation">
+          <span class="eq-var">D</span><sub>t&minus;1</sub> =
+          <span class="frac">
+            <span class="num"><span class="eq-var">D</span><sub>t</sub> + (<span class="eq-var">H</span><sub>eff,t</sub> / <span class="eq-var">A</span><sub>t</sub>)</span>
+            <span class="den">(1&minus;<span class="eq-var">m</span><sub>t</sub>)<span class="eq-var">&lambda;</span><sub>t</sub></span>
+          </span>
+        </div>
+        <div class="variable-grid primary-vars">
+          <div class="variable"><span class="sym">D<sub>t</sub></span> = wolf density in year <em>t</em>, reported as wolves per 1,000&nbsp;km&sup2;.</div>
+          <div class="variable"><span class="sym">D<sub>t&minus;1</sub></span> = back-calculated density for the previous year.</div>
+          <div class="variable"><span class="sym">H<sub>eff,t</sub></span> = effective bounty payments in year <em>t</em>: the recorded or imputed bounty count after applying any capped compensation. If <em>c</em> = 0, this equals the bounty count. If <em>c</em> &gt; 0, the model lets some bounty payments replace deaths that would otherwise have occurred, but only up to the estimated non-bounty mortality available in that year.</div>
+          <div class="variable"><span class="sym">A<sub>t</sub></span> = county area in year <em>t</em>, in 1,000&nbsp;km&sup2; units.</div>
+          <div class="variable"><span class="sym">&lambda;<sub>t</sub></span> = annual population growth multiplier before additional non-bounty mortality.</div>
+          <div class="variable"><span class="sym">m<sub>t</sub></span> = additional mortality rate from non-bounty causes such as disease, strife, starvation, or unrecorded mortality.</div>
+        </div>
+        <div class="aux-breakout">
+          <div class="aux-grid">
+            <div class="variable"><span class="sym">c</span> (compensation coefficient): controls how much bounty mortality may displace non-bounty mortality, with a cap so compensation cannot exceed the estimated non-bounty deaths available.</div>
+            <div class="variable"><span class="sym wide">R</span> = human-caused mortality needed to reduce population. This is not an independent model input. The baseline threshold is <span class="sym wide">R = &lambda;(1&minus;m)&minus;1</span>; when compensation is allowed, the diagnostic comparison uses the compensation-adjusted threshold shown in the summary panel.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<footer>
+  Data collected from historical Virginia county court records at the Library of Virginia and digitized on FamilySearch.org. Model adjusted from Justin A. Dellinger and Steven Torres, &ldquo;A retrospective look at mountain lion populations in California (1906&ndash;2018),&rdquo; <em>California Fish and Wildlife</em> 106(1):66&ndash;85 (2020).
+</footer>
+
+<script>
+const DATA = 
+{"Pendleton":{"years":[1788,1789,1790,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1811,1812,1813,1814,1815,1816,1817,1818,1819,1820,1821,1822,1823,1824,1825,1826,1827,1828,1829,1830,1831,1832,1833,1834,1835,1836,1837,1838,1839,1840,1841,1842,1843,1844,1845,1846,1847,1848,1849,1850,1851,1852,1853,1854,1855,1856,1857,1858,1859,1860,1861,1862,1863,1864,1865,1866,1867,1868,1869,1870,1871,1872,1873,1874,1875,1876,1877,1878,1879,1880,1881,1882,1883,1884,1885,1886,1887,1888,1889,1890,1891,1892,1893,1894,1895,1896,1897,1898],"removed":[15.0,12.0,12.0,10.0,7.0,13.0,0.0,0.0,0.0,23.0,14.0,12.0,10.0,13.0,34.0,12.0,15.0,11.0,11.0,13.0,11.0,10.0,28.0,18.0,29.0,11.0,15.0,15.0,27.0,28.0,14.0,23.0,13.0,10.0,24.0,13.0,17.0,17.0,9.0,8.0,13.0,16.0,2.0,8.0,23.0,4.0,6.0,5.0,6.0,8.0,14.0,13.0,7.0,5.0,9.0,13.0,5.0,2.0,5.0,1.0,10.0,7.0,2.0,2.0,0.0,10.0,0.0,8.0,6.0,4.0,0.0,0.0,0.0,0.0,3.0,1.0,0.0,0.0,3.0,1.0,2.0,0.0,0.0,0.0,1.0,3.0,7.0,6.0,3.0,1.0,0.0,0.0,7.0,1.0,0.0,6.0,1.0,0.0,2.0,1.0,3.0,0.0,0.0,1.0,1.0,0.0,2.0,1.0,2.0,0.0,0.0],"sqmi":[683.0,683.0,683.0,698.0,698.0,698.0,698.0,698.0,698.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,1066.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,928.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0,698.0]},"PrincessAnne":{"years":[1691,1692,1693,1694,1695,1696,1697,1698,1699,1700,1701,1702,1703,1704,1705,1706,1707,1708,1709,1710,1711,1712,1713,1714,1715,1716,1717,1718,1719,1720,1721,1722,1723,1724,1725,1726,1727,1728,1729,1730,1731,1732,1733,1734,1735,1736,1737,1738,1739,1740,1741,1742,1743,1744,1745,1746,1747,1748,1749,1750,1751,1752,1753,1754,1755,1756,1757,1758,1759,1760,1761,1762,1763,1764,1765,1766,1767,1768,1769,1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781],"removed":[7.0,10.0,30.0,6.0,19.0,27.0,22.0,27.0,11.0,12.0,15.0,18.0,29.0,11.0,28.0,4.0,14.0,10.0,25.0,11.0,13.0,16.0,null,16.0,4.0,7.0,null,5.0,0.0,4.0,15.0,7.0,10.0,6.0,4.0,13.0,2.0,4.0,9.0,3.0,16.0,7.0,10.0,5.0,17.0,15.0,9.0,6.0,1.0,0.0,0.0,1.0,7.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,null,null,null,null,null,null,null,null,1.0,2.0,null,0.0,0.0,null,0.0,0.0,null,null,0.0],"sqmi":[273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0,273.0]},"Bedford":{"years":[1754,1755,1756,1757,1758,1759,1760,1761,1762,1763,1764,1765,1766,1767,1768,1769,1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,1784,1785,1786,1787,1788,1789,1790,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1811,1812,1813,1814,1815,1816,1817,1818,1819,1820,1821,1822,1823,1824,1825,1826,1827,1828,1829,1830,1831,1832,1833,1834,1835,1836,1837,1838,1839,1840,1841,1842,1843,1844,1845,1846,1847,1848,1849,1850,1851,1852,1853,1854,1855,1856,1857,1858,1859,1860],"removed":[13.0,42.0,41.0,24.0,17.0,18.0,31.0,30.0,27.0,39.0,25.0,42.0,15.0,20.0,30.0,44.0,31.0,21.0,18.0,21.0,12.0,16.0,4.0,17.0,9.0,7.0,0.0,0.0,27.0,27.0,19.0,27.0,8.0,4.0,26.0,6.0,5.0,3.0,2.0,10.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,4.0,7.0,10.0,4.0,1.0,1.0,0.0,11.0,1.0,3.0,14.0,0.0,1.0,0.0,5.0,0.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,4.0,7.0,5.0,0.0,5.0,8.0,8.0,9.0,0.0,0.0,0.0,8.0,10.0,0.0,0.0,14.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"sqmi":[1366.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1706.0,1042.0,1042.0,1042.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0,787.0]},"Frederick":{"years":[1738,1739,1740,1741,1742,1743,1744,1745,1746,1747,1748,1749,1750,1751,1752,1753,1754,1755,1756,1757,1758,1759,1760,1761,1762,1763,1764,1765,1766,1767,1768,1769,1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,1784,1785,1786,1787,1788,1789,1790,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1811,1812,1813,1814,1815,1816,1817,1818,1819,1820,1821,1822,1823,1824,1825,1826,1827,1828,1829,1830,1831,1832,1833,1834,1835,1836,1837,1838,1839,1840,1841,1842,1843,1844,1845,1846,1847,1848,1849,1850,1851,1852,1853,1854,1855,1856,1857,1858,1859,1860,1861,1862,1863,1864,1865,1866,1867,1868,1869,1870,1871,1872,1873,1874,1875,1876,1877,1878,1879,1880,1881,1882,1883,1884,1885,1886,1887,1888,1889,1890,1891,1892,1893,1894,1895,1896,1897,1898,1899,1900,1901,1902,1903,1904,1905],"removed":[null,null,null,null,null,null,null,76.0,65.0,39.0,95.0,21.0,null,66.0,null,26.0,32.0,13.0,38.0,34.0,42.0,13.0,30.0,41.0,29.0,34.0,12.0,4.0,34.0,6.0,35.0,41.0,32.0,39.0,10.0,12.0,0.0,7.0,7.0,0.0,0.0,0.0,0.0,0.0,0.0,15.0,4.0,13.0,0.0,18.0,2.0,9.0,10.0,8.0,0.0,1.0,1.0,0.0,0.0,null,0.0,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],"sqmi":[3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,3134.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,2260.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,710.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0,425.0]},"Northumberland":{"years":[1659,1660,1661,1662,1663,1664,1665,1666,1667,1668,1669,1670,1671,1672,1673,1674,1675,1676,1677,1678,1679,1680,1681,1682,1683,1684,1685,1686,1687,1688,1689,1690,1691,1692,1693,1694,1695,1696,1697,1698,1699,1700,1701,1702,1703,1704,1705,1706,1707,1708,1709,1710,1711,1712,1713,1714,1715,1716,1717,1718,1719],"removed":[12,8,10,16,17,15,10,null,15,13,10,17,12,4,14,3,0,null,14,20,13,13,20,8,7,23,0,4,13,15,17,14,27,8,9,13,9,7,3,15,17,8,9,0,1,2,1,8,2,0,0,0,null,0,null,0,0,0,null,null,null],"sqmi":[211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211,211]},"Amelia":{"years":[1735,1736,1737,1738,1739,1740,1741,1742,1743,1744,1745,1746,1747,1748,1749,1750,1751,1752,1753,1754,1755,1756,1757,1758,1759,1760,1761,1762,1763,1764,1765,1766,1767],"removed":[13,29,39,20,null,15,16,10,24,9,17,6,15,2,7,12,2,4,3,1,0,0,0,0,0,0,0,0,0,0,null,null,null],"sqmi":[1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,1074,675,675,675,675,675,675,675,675,675,675,675,675,675,675]},"Pittsylvania":{"years":[1767,1768,1769,1770,1771,1772,1773,1774,1775,1776,1777,1778,1779,1780,1781,1782,1783,1784,1785,1786,1787,1788,1789,1790,1791,1792,1793,1794,1795,1796,1797,1798,1799,1800,1801,1802,1803,1804,1805,1806,1807,1808,1809,1810,1811,1812,1813,1814,1815,1816,1817,1818,1819,1820,1821,1822,1823,1824,1825],"removed":[24,59,46,49,47,63,14,62,19,19,11,11,9,3,0,10,2,8,2,9,15,11,9,0,0,0,0,0,0,0,0,0,5,6,2,0,0,5,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,1,1,0,null,null,null],"sqmi":[2429,2429,2429,2429,2429,2429,2429,2429,2429,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1022,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019,1019]},"Pocahontas":{"years":[1822,1823,1824,1825,1826,1827,1828,1829,1830,1831,1832,1833,1834,1835,1836,1837,1838,1839,1840,1841,1842,1843,1844,1845,1846,1847,1848,1849,1850,1851,1852,1853,1854,1855,1856,1857,1858,1859,1860,1861,1862,1863],"removed":[18,21,26,21,21,8,16,13,8,20,20,12,17,20,3,7,7,6,3,31,20,16,19,17,6,14,15,9,4,5,8,0,4,9,0,4,2,2,1,null,null,null],"sqmi":[816,816,816,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942,942]}};
+</script>
+<script>
+;
+
+const SQMI_TO_KM2 = 2.58999;
+
+const COUNTY_META = {
+  Amelia:       { label: "Amelia",        color: "#345a42", region: "Southside / Piedmont" },
+  Bedford:      { label: "Bedford",       color: "#345a42", region: "Piedmont / Blue Ridge foothills" },
+  Frederick:    { label: "Frederick",     color: "#345a42", region: "Lower Shenandoah Valley" },
+  Northumberland:{ label: "Northumberland", color: "#345a42", region: "Northern Neck / coastal plain" },
+  Pendleton:    { label: "Pendleton",     color: "#345a42", region: "Allegheny highlands (now WV)" },
+  Pittsylvania: { label: "Pittsylvania",  color: "#345a42", region: "Southside Virginia" },
+  Pocahontas:   { label: "Pocahontas",    color: "#345a42", region: "Allegheny highlands (now WV)" },
+  PrincessAnne: { label: "Princess Anne", color: "#345a42", region: "Coastal plain (now Virginia Beach)" }
+};
+
+const MAIN_LINE_COLOR = "#1e3657";
+const BOUNTY_DENSITY_COLOR = "#FF0000";
+
+let state = {
+  county: "Pendleton",
+  lambdaMean: 1.30, lambdaSd: 0.05,
+  mMean: 0.10, mSd: 0.03,
+  comp: 0.15,
+  startDensLow: 0, startDensHigh: 0,
+  reps: 1000,
+  fillMethod: "interp",
+  viewMode: "density"
+};
+
+// ---------- data prep ----------
+function isMissing(v){ return v === null || v === undefined; }
+
+function firstKnownIndex(s){
+  return s.removed.findIndex(v => !isMissing(v));
+}
+
+function endIndexAtFirstThreeNulls(s){
+  // Leading NULLs before the first surviving ledger entry are ignored; they mark
+  // pre-record span, not the terminal boundary of the dataset.
+  const firstKnown = firstKnownIndex(s);
+  if(firstKnown < 0) return s.years.length - 1;
+  for(let i=firstKnown+1; i<=s.removed.length-3; i++){
+    if(isMissing(s.removed[i]) && isMissing(s.removed[i+1]) && isMissing(s.removed[i+2])){
+      return i; // include the first NULL year as the terminal modeled year
+    }
+  }
+  return s.years.length - 1;
+}
+
+function effectiveSeries(name){
+  const s = DATA[name];
+  const startIdx = firstKnownIndex(s);
+  if(startIdx < 0){
+    return { years: [], removed: [], sqmi: [], truncated: true, startReason: "no surviving wolf-bounty data", terminalReason: "no surviving wolf-bounty data" };
+  }
+  const endIdx = Math.max(startIdx, endIndexAtFirstThreeNulls(s));
+  return {
+    years: s.years.slice(startIdx, endIdx+1),
+    removed: s.removed.slice(startIdx, endIdx+1),
+    sqmi: s.sqmi.slice(startIdx, endIdx+1),
+    truncatedStart: startIdx > 0,
+    truncated: endIdx < s.years.length-1,
+    startReason: startIdx > 0 ? "first year with surviving wolf-bounty data" : "first row in dataset",
+    terminalReason: endIdx < s.years.length-1 ? "first of three consecutive NULL wolf-harvest years" : "last row in dataset"
+  };
+}
+
+function countySeries(name){
+  return effectiveSeries(name);
+}
+
+function fillMissing(years, removed, method){
+  const out = removed.slice();
+  const known = [];
+  out.forEach((v,i)=>{ if(v !== null && v !== undefined) known.push(i); });
+  if(known.length === 0) return out.map(()=>0);
+  const meanKnown = known.reduce((a,i)=>a+out[i],0) / known.length;
+  for(let i=0;i<out.length;i++){
+    if(out[i] !== null && out[i] !== undefined) continue;
+    if(method === "zero"){ out[i] = 0; continue; }
+    if(method === "mean"){ out[i] = meanKnown; continue; }
+    let prev = null, next = null;
+    for(let k=known.length-1;k>=0;k--){ if(known[k] < i){ prev = known[k]; break; } }
+    for(let k=0;k<known.length;k++){ if(known[k] > i){ next = known[k]; break; } }
+    if(prev === null && next === null){ out[i] = 0; }
+    else if(prev === null){ out[i] = 0; } // do not back-fill before the first surviving ledger entry
+    else if(next === null){ out[i] = 0; } // do not forward-fill after the last surviving ledger entry
+    else {
+      const frac = (i - prev) / (next - prev);
+      out[i] = out[prev] + frac * (out[next] - out[prev]);
+    }
+  }
+  return out;
+}
+
+function sampleNormal(mean, sd){
+  if(sd <= 0) return mean;
+  let u = 1 - Math.random();
+  let v = Math.random();
+  let z = Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  return mean + z*sd;
+}
+function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
+
+// ---------- simulation ----------
+// Literal Dellinger & Torres (2020) backward equation:
+//   N_{t-1} = (N_t + d_t) / [(1-m_t) * lambda_t]
+// Rewritten per unit area, D = N/area*1000 (wolves per 1000 km^2).
+// Important: the recurrence is density-continuous across boundary years. Area is used
+// to convert bounty payments into bounty-payment density and later to back-convert density to
+// raw counts, but no area_t/area_{t-1} multiplier is applied to the density itself.
+// This avoids artificial split-year jumps such as Frederick around 1773.
+//
+// Here the sustainable replacement threshold is not a free slider. It is derived:
+//   R = lambda*(1-m) - 1
+// If c > 0, some bounty mortality is allowed to displace non-bounty mortality. The
+// implementation caps compensation at the amount of non-bounty mortality available.
+function additiveThreshold(lam, m){
+  return Math.max(0, lam * (1 - m) - 1);
+}
+function compensatedThreshold(lam, m, c){
+  const r0 = additiveThreshold(lam, m);
+  if(c <= 0) return r0;
+  const simple = r0 / Math.max(1e-9, (1 - c));
+  const cap = Math.max(0, lam - 1); // cannot exceed full displacement of non-bounty mortality
+  return Math.min(simple, cap);
+}
+function fmtPct(v){ return (100*v).toFixed(1).replace(/\.0$/, '') + "%"; }
+function backwardStepDensity(Dt, d_t, areaT_km2, areaT1_km2, lam, m, c){
+  // Convert that year's bounty count to a density over the county area actually represented
+  // in that ledger year. The previous year's area is intentionally not used in the density
+  // recurrence; it is only used later when the user toggles to raw-count view.
+  const dDensity = (d_t / areaT_km2) * 1000;
+  const denomAdditive = Math.max(1e-9, (1 - m) * lam);
+
+  // Low-to-moderate bounty case: compensation reduces effective bounty payments by c*density.
+  let Dprev = (Dt + (1 - c) * dDensity) / denomAdditive;
+  const potentialNonBountyDeathsDensity = m * lam * Dprev;
+  const requestedCompensationDensity = c * dDensity;
+
+  // High bounty case: compensation is capped; all non-bounty mortality is displaced.
+  if(requestedCompensationDensity > potentialNonBountyDeathsDensity + 1e-9){
+    Dprev = (Dt + dDensity) / Math.max(1e-9, lam);
+  }
+
+  return Math.max(Dprev, 0);
+}
+
+function runModel(){
+  const s = countySeries(state.county);
+  const rawRemoved = s.removed.slice();
+  const filled = fillMissing(s.years, s.removed, state.fillMethod);
+  const years = s.years;
+  const n = years.length;
+  const sqmi = s.sqmi;
+  const areaKm2 = sqmi.map(a => Math.max(1e-6, (a||0) * SQMI_TO_KM2));
+
+  const startLow = state.startDensLow;
+  const startHigh = Math.max(startLow, state.startDensHigh);
+
+  const reps = state.reps;
+  const matrix = new Array(reps); // matrix[rep][yearIndex] = density (wolves/1000km2)
+  const thresholdMatrix = new Array(reps); // derived replacement threshold for diagnostics
+  for(let r=0;r<reps;r++){
+    const traj = new Array(n);
+    const threshTraj = new Array(n);
+    let D = startLow + Math.random()*(startHigh-startLow);
+    traj[n-1] = D;
+    threshTraj[n-1] = compensatedThreshold(state.lambdaMean, state.mMean, state.comp);
+    for(let i=n-1;i>0;i--){
+      const d = filled[i];
+      const lam = clamp(sampleNormal(state.lambdaMean, state.lambdaSd), 1.01, 2.5);
+      const m = clamp(sampleNormal(state.mMean, state.mSd), 0, 0.85);
+      threshTraj[i] = compensatedThreshold(lam, m, state.comp);
+      D = backwardStepDensity(D, d, areaKm2[i], areaKm2[i-1], lam, m, state.comp);
+      traj[i-1] = D;
+    }
+    threshTraj[0] = compensatedThreshold(state.lambdaMean, state.mMean, state.comp);
+    matrix[r] = traj;
+    thresholdMatrix[r] = threshTraj;
+  }
+
+  // deterministic bound trajectories (paper Fig.1 style): lambda/m held at +-1 SD
+  const startMid = (startLow+startHigh)/2;
+  function boundTraj(lam, m){
+    const traj = new Array(n);
+    let D = startMid;
+    traj[n-1] = D;
+    for(let i=n-1;i>0;i--){
+      const d = filled[i];
+      D = backwardStepDensity(D, d, areaKm2[i], areaKm2[i-1], lam, m, state.comp);
+      traj[i-1] = D;
+    }
+    return traj;
+  }
+  const upperTraj = boundTraj(state.lambdaMean + state.lambdaSd, Math.max(0, state.mMean - state.mSd));
+  const lowerTraj = boundTraj(Math.max(1.01, state.lambdaMean - state.lambdaSd), state.mMean + state.mSd);
+
+  const densMean = new Array(n), densP10 = new Array(n), densP90 = new Array(n);
+  const thresholdMean = new Array(n), exceedProp = new Array(n);
+  for(let i=0;i<n;i++){
+    const col = matrix.map(row=>row[i]).sort((a,b)=>a-b);
+    const sum = col.reduce((a,b)=>a+b,0);
+    densMean[i] = sum/reps;
+    densP10[i] = col[Math.floor(0.10*(reps-1))];
+    densP90[i] = col[Math.floor(0.90*(reps-1))];
+    thresholdMean[i] = thresholdMatrix.map(row=>row[i]).reduce((a,b)=>a+b,0) / reps;
+    const dDensity_i = (filled[i] / areaKm2[i]) * 1000;
+    let exceed = 0;
+    for(let r=0;r<reps;r++){
+      if(dDensity_i > thresholdMatrix[r][i] * matrix[r][i]) exceed++;
+    }
+    exceedProp[i] = exceed/reps;
+  }
+
+  // raw-count equivalents, for the "raw count" chart toggle
+  const toCount = (arr) => arr.map((v,i) => (v/1000) * areaKm2[i]);
+  const mean = toCount(densMean), p10 = toCount(densP10), p90 = toCount(densP90);
+  const upperCount = toCount(upperTraj), lowerCount = toCount(lowerTraj);
+
+  return {
+    years, filled, rawRemoved, sqmi, areaKm2,
+    densMean, densP10, densP90, densUpper: upperTraj, densLower: lowerTraj,
+    mean, p10, p90, upperTraj: upperCount, lowerTraj: lowerCount,
+    thresholdMean, exceedProp, startLow, startHigh, n
+  };
+}
+
+// ---------- SVG chart helpers ----------
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs){
+  const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function pathFromPoints(xs, ys){
+  let d = "";
+  for(let i=0;i<xs.length;i++){
+    d += (i===0 ? "M" : "L") + xs[i].toFixed(1) + "," + ys[i].toFixed(1) + " ";
+  }
+  return d;
+}
+
+function fmtNumber(v, digits=1){
+  if(v === null || v === undefined || !isFinite(v)) return "—";
+  return Number(v).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+function fmtWhole(v){
+  if(v === null || v === undefined || !isFinite(v)) return "—";
+  return Math.round(v).toLocaleString();
+}
+function fmtPct(v, digits=0){
+  if(v === null || v === undefined || !isFinite(v)) return "—";
+  return (v*100).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) + "%";
+}
+function tooltipRow(k, v){
+  return `<div class="tt-row"><span class="tt-k">${k}</span><span class="tt-v">${v}</span></div>`;
+}
+function showTooltip(evt, html){
+  const tip = document.getElementById("chartTooltip");
+  tip.innerHTML = html;
+  tip.style.display = "block";
+  const pad = 14;
+  let left = evt.clientX + pad;
+  let top = evt.clientY + pad;
+  const rect = tip.getBoundingClientRect();
+  if(left + rect.width + 8 > window.innerWidth) left = evt.clientX - rect.width - pad;
+  if(top + rect.height + 8 > window.innerHeight) top = evt.clientY - rect.height - pad;
+  tip.style.left = left + "px";
+  tip.style.top = top + "px";
+}
+function hideTooltip(){
+  const tip = document.getElementById("chartTooltip");
+  if(tip) tip.style.display = "none";
+}
+function chartIndexFromEvent(evt, svg, W, ML, plotW, n){
+  const rect = svg.getBoundingClientRect();
+  const xSvg = (evt.clientX - rect.left) * (W / rect.width);
+  const frac = clamp((xSvg - ML) / plotW, 0, 1);
+  return Math.round(frac * (n - 1));
+}
+function attachChartHover(svg, res, dims, htmlForIndex){
+  const {W, H, ML, MT, MB, plotW} = dims;
+  const plotH = H - MT - MB;
+  const hoverLine = el("line", {x1:ML, x2:ML, y1:MT, y2:H-MB, stroke:"var(--forest)", "stroke-width":1, opacity:0, "pointer-events":"none"});
+  svg.appendChild(hoverLine);
+  const hoverRect = el("rect", {x:ML, y:MT, width:plotW, height:plotH, fill:"transparent", class:"hover-layer", "pointer-events":"all"});
+  hoverRect.addEventListener("mousemove", (evt)=>{
+    const idx = chartIndexFromEvent(evt, svg, W, ML, plotW, res.n);
+    const xSvg = ML + (idx/(res.n-1)) * plotW;
+    hoverLine.setAttribute("x1", xSvg);
+    hoverLine.setAttribute("x2", xSvg);
+    hoverLine.setAttribute("opacity", 0.55);
+    showTooltip(evt, htmlForIndex(idx));
+  });
+  hoverRect.addEventListener("mouseleave", ()=>{
+    hoverLine.setAttribute("opacity", 0);
+    hideTooltip();
+  });
+  svg.appendChild(hoverRect);
+}
+
+function drawChart1(res){
+  const svg = document.getElementById("chart1");
+  svg.innerHTML = "";
+  const W = 960, H = 380, ML=72, MR=66, MT=16, MB=52;
+  const plotW = W-ML-MR, plotH = H-MT-MB;
+  const years = res.years;
+  const isDensity = state.viewMode === "density";
+
+  const seriesMean = isDensity ? res.densMean : res.mean;
+  const seriesP10 = isDensity ? res.densP10 : res.p10;
+  const seriesP90 = isDensity ? res.densP90 : res.p90;
+  const seriesUpper = isDensity ? res.densUpper : res.upperTraj;
+  const seriesLower = isDensity ? res.densLower : res.lowerTraj;
+  const paymentDensity = res.filled.map((v,i)=>(v / res.areaKm2[i]) * 1000);
+  const paymentSeries = isDensity ? paymentDensity : res.filled;
+
+  const maxY = Math.max(...seriesUpper, ...seriesP90, ...paymentSeries) * 1.08 || 1;
+  const x = i => ML + (i/(years.length-1)) * plotW;
+  const y = v => MT + plotH - (v/maxY)*plotH;
+
+  const gridN = 5;
+  for(let g=0; g<=gridN; g++){
+    const val = maxY * g/gridN;
+    const yy = y(val);
+    svg.appendChild(el("line",{x1:ML,x2:W-MR,y1:yy,y2:yy,stroke:"var(--paper-line)","stroke-width":1}));
+    const t = el("text",{x:ML-8,y:yy+3,"text-anchor":"end","font-family":"var(--mono)","font-size":9.5,fill:"#526057"});
+    t.textContent = isDensity ? val.toFixed(1) : Math.round(val).toLocaleString();
+    svg.appendChild(t);
+  }
+  const ticks = 8;
+  for(let ti=0; ti<=ticks; ti++){
+    const idx = Math.round(ti/ticks*(years.length-1));
+    const xx = x(idx);
+    svg.appendChild(el("line",{x1:xx,x2:xx,y1:MT,y2:H-MB,stroke:"var(--paper-line)","stroke-width":1}));
+    const t = el("text",{x:xx,y:H-MB+16,"text-anchor":"middle","font-family":"var(--mono)","font-size":9.5,fill:"#526057"});
+    t.textContent = years[idx];
+    svg.appendChild(t);
+  }
+
+  const xs = years.map((_,i)=>x(i));
+
+  const bandTop = seriesP90.map(v=>y(v));
+  const bandBot = seriesP10.map(v=>y(v));
+  let bandPath = pathFromPoints(xs, bandTop);
+  bandPath += pathFromPoints(xs.slice().reverse(), bandBot.slice().reverse()).replace("M","L");
+  bandPath += "Z";
+  svg.appendChild(el("path",{d:bandPath, fill: MAIN_LINE_COLOR, opacity:0.18, stroke:"none"}));
+
+  svg.appendChild(el("path",{d:pathFromPoints(xs, seriesUpper.map(v=>y(v))), fill:"none", stroke:MAIN_LINE_COLOR, "stroke-width":1.2, "stroke-dasharray":"3,3", opacity:0.65}));
+  svg.appendChild(el("path",{d:pathFromPoints(xs, seriesLower.map(v=>y(v))), fill:"none", stroke:MAIN_LINE_COLOR, "stroke-width":1.2, "stroke-dasharray":"3,3", opacity:0.65}));
+
+  svg.appendChild(el("path",{d:pathFromPoints(xs, seriesMean.map(v=>y(v))), fill:"none", stroke: MAIN_LINE_COLOR, "stroke-width":2.4}));
+  svg.appendChild(el("path",{d:pathFromPoints(xs, paymentSeries.map(v=>y(v))), fill:"none", stroke: BOUNTY_DENSITY_COLOR, "stroke-width":1.15}));
+
+  svg.appendChild(el("line",{x1:ML,x2:W-MR,y1:H-MB,y2:H-MB,stroke:"#526057","stroke-width":1}));
+  svg.appendChild(el("line",{x1:ML,x2:ML,y1:MT,y2:H-MB,stroke:"#526057","stroke-width":1}));
+  const yAxisLabel = el("text",{x:20,y:MT+plotH/2,"text-anchor":"middle","font-family":"var(--mono)","font-size":11,fill:"#29374f",transform:`rotate(-90 20 ${MT+plotH/2})`});
+  yAxisLabel.textContent = isDensity ? "Wolves per 1000 km²" : "Wolves";
+  svg.appendChild(yAxisLabel);
+  const xAxisLabel = el("text",{x:ML+plotW/2,y:H-10,"text-anchor":"middle","font-family":"var(--mono)","font-size":11,fill:"#29374f"});
+  xAxisLabel.textContent = "Year";
+  svg.appendChild(xAxisLabel);
+
+  document.getElementById("chart1Title").textContent =
+    (isDensity ? "Wolf Population Density in " : "Wolf Population Count in ") + COUNTY_META[state.county].label + ", " + years[0] + "–" + years[years.length-1];
+  document.getElementById("chart1Desc").textContent = "";
+  document.getElementById("legend1").innerHTML =
+    `<span><i class="ln" style="border-color:${MAIN_LINE_COLOR}"></i> mean of replicates</span>` +
+    `<span><i class="sw" style="background:${MAIN_LINE_COLOR}; opacity:.35"></i> 10th–90th percentile</span>` +
+    `<span><i class="ln dash" style="border-color:${MAIN_LINE_COLOR}; opacity:.65"></i> deterministic ±1 SD bounds</span>` +
+    `<span><i class="ln" style="border-color:${BOUNTY_DENSITY_COLOR}"></i> ${isDensity ? "bounty payments per 1,000 km²" : "bounty payments"}</span>`;
+
+  attachChartHover(svg, res, {W,H,ML,MT,MB,plotW}, (i)=>{
+    const source = (res.rawRemoved[i] === null || res.rawRemoved[i] === undefined) ? "filled" : "recorded";
+    return `<div class="tt-title">${COUNTY_META[state.county].label}, ${years[i]}</div>` +
+      tooltipRow("Mean density", `${fmtNumber(res.densMean[i],1)} wolves / 1,000 km²`) +
+      tooltipRow("10–90% density", `${fmtNumber(res.densP10[i],1)}–${fmtNumber(res.densP90[i],1)}`) +
+      tooltipRow("Mean count", `${fmtNumber(res.mean[i],1)} wolves`) +
+      tooltipRow("Bounty payments", `${fmtNumber(res.filled[i],1)} (${source})`) +
+      tooltipRow("Payment density", `${fmtNumber(paymentDensity[i],1)} / 1,000 km²`) +
+      tooltipRow("County area", `${fmtWhole(res.areaKm2[i])} km²`);
+  });
+}
+
+function drawAreaChart(res){
+  const svg = document.getElementById("chartArea");
+  svg.innerHTML = "";
+  const W = 960, H = 200, ML=72, MR=66, MT=14, MB=42;
+  const plotW = W-ML-MR, plotH = H-MT-MB;
+  const years = res.years;
+  const maxArea = Math.max(...res.areaKm2) * 1.1;
+  const paymentDensity = res.filled.map((v,i)=>(v / res.areaKm2[i]) * 1000);
+  const x = i => ML + (i/(years.length-1)) * plotW;
+  const y = v => MT + plotH - (v/maxArea)*plotH;
+
+  const gridN = 4;
+  for(let g=0; g<=gridN; g++){
+    const val = maxArea*g/gridN;
+    const yy = y(val);
+    svg.appendChild(el("line",{x1:ML,x2:W-MR,y1:yy,y2:yy,stroke:"var(--paper-line)","stroke-width":1}));
+    const t = el("text",{x:ML-8,y:yy+3,"text-anchor":"end","font-family":"var(--mono)","font-size":9.5,fill:"#526057"});
+    t.textContent = Math.round(val).toLocaleString();
+    svg.appendChild(t);
+  }
+  const ticks = 8;
+  for(let ti=0; ti<=ticks; ti++){
+    const idx = Math.round(ti/ticks*(years.length-1));
+    const xx = x(idx);
+    const t = el("text",{x:xx,y:H-MB+16,"text-anchor":"middle","font-family":"var(--mono)","font-size":9.5,fill:"#526057"});
+    t.textContent = years[idx];
+    svg.appendChild(t);
+  }
+  const xs = years.map((_,i)=>x(i));
+  svg.appendChild(el("path",{d:pathFromPoints(xs, res.areaKm2.map(v=>y(v))), fill:"none", stroke: MAIN_LINE_COLOR, "stroke-width":2}));
+  svg.appendChild(el("line",{x1:ML,x2:W-MR,y1:H-MB,y2:H-MB,stroke:"#526057","stroke-width":1}));
+  svg.appendChild(el("line",{x1:ML,x2:ML,y1:MT,y2:H-MB,stroke:"#526057","stroke-width":1}));
+  const yAxisLabel = el("text",{x:20,y:MT+plotH/2,"text-anchor":"middle","font-family":"var(--mono)","font-size":11,fill:"#29374f",transform:`rotate(-90 20 ${MT+plotH/2})`});
+  yAxisLabel.textContent = "km²";
+  svg.appendChild(yAxisLabel);
+  const xAxisLabel = el("text",{x:ML+plotW/2,y:H-8,"text-anchor":"middle","font-family":"var(--mono)","font-size":11,fill:"#29374f"});
+  xAxisLabel.textContent = "Year";
+  svg.appendChild(xAxisLabel);
+
+  document.getElementById("legendArea").innerHTML =
+    `<span><i class="ln" style="border-color:${MAIN_LINE_COLOR}"></i> county area</span>`;
+
+  attachChartHover(svg, res, {W,H,ML,MT,MB,plotW}, (i)=>{
+    return `<div class="tt-title">${COUNTY_META[state.county].label}, ${years[i]}</div>` +
+      tooltipRow("County area", `${fmtWhole(res.areaKm2[i])} km²`) +
+      tooltipRow("County area", `${fmtNumber(res.sqmi[i],1)} sq mi`) +
+      tooltipRow("Bounty payments", `${fmtNumber(res.filled[i],1)}`) +
+      tooltipRow("Payment density", `${fmtNumber(paymentDensity[i],1)} / 1,000 km²`) +
+      tooltipRow("Modeled density", `${fmtNumber(res.densMean[i],1)} / 1,000 km²`) +
+      tooltipRow("Modeled count", `${fmtNumber(res.mean[i],1)} wolves`);
+  });
+}
+
+function renderStats(res){
+  const strip = document.getElementById("statStrip");
+  const totalBountyPayments = res.filled.reduce((a,b)=>a+b,0);
+  const densInitial = res.densMean[0], densFinal = res.densMean[res.n-1];
+  const areaInitial = res.areaKm2[0], areaFinal = res.areaKm2[res.n-1];
+  const rAdd = additiveThreshold(state.lambdaMean, state.mMean);
+  const rComp = compensatedThreshold(state.lambdaMean, state.mMean, state.comp);
+
+  let extirpYear = null;
+  for(let i=0; i<res.n; i++){
+    if(res.densMean[i] <= 1e-9){
+      extirpYear = res.years[i];
+      break;
+    }
+  }
+
+  strip.innerHTML = "";
+  let peakIndex = 0;
+  for(let i=1; i<res.n; i++){
+    if(res.densMean[i] > res.densMean[peakIndex]) peakIndex = i;
+  }
+  const peakYear = res.years[peakIndex];
+  const peakDensity = res.densMean[peakIndex];
+
+  const items = [
+    { k: "Years modeled", v: res.years[0] + "–" + res.years[res.n-1], sub: "" },
+    { k: "Human-caused mortality needed to reduce population", v: fmtPct(rComp), sub: "" },
+    { k: "Backcalculated initial density, " + res.years[0], v: densInitial.toFixed(2), sub: "wolves/1000km²" },
+    { k: "Extirpation year", v: extirpYear !== null ? extirpYear : "—", sub: extirpYear !== null ? (densFinal <= 1e-9 ? "terminal density = 0" : "first modeled year with density 0") : "not reached in current run" },
+    { k: "Total bounty payments", v: Math.round(totalBountyPayments).toLocaleString(), sub: "" },
+    { k: "Peak density (" + peakYear + ")", v: peakDensity.toFixed(2), sub: "wolves/1000km²" },
+  ];
+  items.forEach(it=>{
+    const d = document.createElement("div");
+    d.className = "stat";
+    d.innerHTML = `<div class="k">${it.k}</div><div class="v">${it.v}${it.sub ? ` <small>${it.sub}</small>` : ""}</div>`;
+    strip.appendChild(d);
+  });
+}
+
+function renderDataNote(res){
+  const s = countySeries(state.county);
+  const knownYears = s.removed.filter(v=>v!==null && v!==undefined).length;
+  const areaMinMi = Math.min(...s.sqmi), areaMaxMi = Math.max(...s.sqmi);
+  document.getElementById("dataNote").textContent =
+    `Ledger span: ${s.years[0]}–${s.years[s.years.length-1]} · ` +
+    `${knownYears}/${s.years.length} years with a recorded bounty count · ` +
+    `area ${Math.round(areaMinMi*SQMI_TO_KM2).toLocaleString()}–${Math.round(areaMaxMi*SQMI_TO_KM2).toLocaleString()} km²${areaMinMi!==areaMaxMi ? " (county borders changed over time)" : ""}.`;
+}
+
+function syncControlLabels(){
+  document.getElementById("lambdaMeanVal").textContent = state.lambdaMean.toFixed(2);
+  document.getElementById("lambdaSdVal").textContent = "±" + state.lambdaSd.toFixed(3);
+  document.getElementById("mMeanVal").textContent = state.mMean.toFixed(2);
+  document.getElementById("mSdVal").textContent = "±" + state.mSd.toFixed(3);
+  document.getElementById("compVal").textContent = fmtPct(state.comp);
+  document.getElementById("startDensVal").textContent = state.startDensLow.toFixed(1) + "–" + state.startDensHigh.toFixed(1) + " /1000km²";
+  document.getElementById("repsVal").textContent = state.reps;
+
+  const rAdd = additiveThreshold(state.lambdaMean, state.mMean);
+  const rComp = compensatedThreshold(state.lambdaMean, state.mMean, state.comp);
+  document.getElementById("thresholdNote").innerHTML =
+    `Human-caused mortality needed to reduce population: <strong>${fmtPct(rAdd)}</strong> = λ(1−m)−1. ` +
+    `Compensation-adjusted figure: <strong>${fmtPct(rComp)}</strong>.`;
+}
+
+function rerun(){
+  if(state.startDensLow > state.startDensHigh){
+    const tmp = state.startDensLow; state.startDensLow = state.startDensHigh; state.startDensHigh = tmp;
+    document.getElementById("startDensLow").value = state.startDensLow;
+    document.getElementById("startDensHigh").value = state.startDensHigh;
+  }
+  syncControlLabels();
+  const res = runModel();
+  renderDataNote(res);
+  document.getElementById("startRangeHint").textContent =
+    `At final year (${res.years[res.n-1]}, area ${Math.round(res.areaKm2[res.n-1]).toLocaleString()} km²) that's ≈ ${Math.round(res.startLow/1000*res.areaKm2[res.n-1])}–${Math.round(res.startHigh/1000*res.areaKm2[res.n-1])} wolves.`;
+  renderStats(res);
+  drawChart1(res);
+  drawAreaChart(res);
+}
+
+// ---------- wire up controls ----------
+function buildCountyTabs(){
+  const wrap = document.getElementById("countyTabs");
+  ["Amelia","Bedford","Frederick","Northumberland","Pendleton","Pittsylvania","Pocahontas","PrincessAnne"].forEach(key=>{
+    const meta = COUNTY_META[key];
+    const div = document.createElement("div");
+    div.className = "county-tab" + (key===state.county ? " active" : "");
+    div.dataset.key = key;
+    const s = countySeries(key);
+    const span = s.years[0] + "–" + s.years[s.years.length-1];
+    div.innerHTML = `<span class="name"><i class="swatch" style="background:${meta.color}"></i>${meta.label}</span><span class="span">${span}</span>`;
+    div.addEventListener("click", ()=>{
+      state.county = key;
+      document.querySelectorAll(".county-tab").forEach(t=>t.classList.remove("active"));
+      div.classList.add("active");
+      rerun();
+    });
+    wrap.appendChild(div);
+  });
+}
+
+function bindRange(id, key, transform){
+  const inp = document.getElementById(id);
+  inp.value = state[key];
+  inp.addEventListener("input", ()=>{
+    state[key] = transform ? transform(parseFloat(inp.value)) : parseFloat(inp.value);
+    rerun();
+  });
+}
+
+function bindSegmented(id, key){
+  document.querySelectorAll("#"+id+" button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll("#"+id+" button").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      state[key] = btn.dataset.v;
+      rerun();
+    });
+  });
+}
+
+function init(){
+  buildCountyTabs();
+  bindRange("lambdaMean","lambdaMean");
+  bindRange("lambdaSd","lambdaSd");
+  bindRange("mMean","mMean");
+  bindRange("mSd","mSd");
+  bindRange("comp","comp");
+  bindRange("startDensLow","startDensLow");
+  bindRange("startDensHigh","startDensHigh");
+  bindRange("reps","reps", v=>Math.round(v));
+  bindSegmented("fillMethod","fillMethod");
+  bindSegmented("viewMode","viewMode");
+  rerun();
+}
+init();
+
+</script>
+</body>
+</html>
