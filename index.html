@@ -570,7 +570,7 @@
       <div class="model-panel">
         <div class="model-label">The Model</div>
         <p class="model-plain">
-          The model begins with an assumed wolf density in the final modeled ledger year and works backward one year at a time. For each year, it adds back that year&rsquo;s effective bounty payments, divides them by <em>A</em><sub>t</sub> (county area in year <em>t</em>, measured in 1,000&nbsp;km&sup2; units), and then divides by the year&rsquo;s net demographic multiplier, &lambda;(1&minus;m). The result is a reconstructed previous-year density. County area affects bounty-payment density and raw-count display, but the density curve itself is not forced to jump simply because a county boundary changed.
+          The model begins with an assumed wolf density in the final modeled levy year and works backward one year at a time. For each year, it adds back that year&rsquo;s effective bounty payments, divides them by <em>A</em><sub>t</sub> (county area in year <em>t</em>, measured in 1,000&nbsp;km&sup2; units), and then divides by the year&rsquo;s net demographic multiplier, &lambda;(1&minus;m). The result is a reconstructed previous-year density. County area affects bounty-payment density and raw-count display, but the density curve itself is not forced to jump simply because a county boundary changed.
         </p>
         <div class="model-equation">
           <span class="eq-var">D</span><sub>t&minus;1</sub> =
@@ -1094,7 +1094,7 @@ function renderDataNote(res){
   const knownYears = s.removed.filter(v=>v!==null && v!==undefined).length;
   const areaMinMi = Math.min(...s.sqmi), areaMaxMi = Math.max(...s.sqmi);
   document.getElementById("dataNote").textContent =
-    `Ledger span: ${s.years[0]}–${s.years[s.years.length-1]} · ` +
+    `Span: ${s.years[0]}–${s.years[s.years.length-1]} · ` +
     `${knownYears}/${s.years.length} years with a recorded bounty count · ` +
     `area ${Math.round(areaMinMi*SQMI_TO_KM2).toLocaleString()}–${Math.round(areaMaxMi*SQMI_TO_KM2).toLocaleString()} km²${areaMinMi!==areaMaxMi ? " (county borders changed over time)" : ""}.`;
 }
